@@ -18,6 +18,7 @@ function recuperaProdottoDaCodice($codice) {
     $stmt = $db->prepare('SELECT * FROM prodotti WHERE codice LIKE :codice');
 
     // filtra i dati ricevuti e si assicura che non contengano caratteri indesiderati
+    //faccio la sanificazione del codice che mi arriva come parametro e lo riassegno alla  variabile codice
     $codice = filter_input(INPUT_GET, 'codice', FILTER_SANITIZE_STRING);
 
     // sanitizza i dati per evitare SQL injections
@@ -25,14 +26,14 @@ function recuperaProdottoDaCodice($codice) {
 
     // esegue la query
     $stmt->execute();
-
+    //gli dico che il risulatato lo voglio come array associativo FETCH_ASSOC, la chiave dell'array è la colonna della tabella
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 function salvaOrdine($prodotti, $utente) {
 
     $db = creaConnessionePDO();
-
+    //inizio la transazione
     try {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -49,17 +50,19 @@ function salvaOrdine($prodotti, $utente) {
         $stmt->bindParam(':citta', $utente['citta'], PDO::PARAM_STR);
         $stmt->bindParam(':cap', $utente['cap'], PDO::PARAM_STR);
         $stmt->bindParam(':provincia', $utente['provincia'], PDO::PARAM_STR);
-
+        //execute non scrive sul database, solo commit scrive
         $stmt->execute();
 
+        //lastInsertId prende sempre l'ultimo id processato
         $idCliente = $db->lastInsertId();
 
         // inserimento in tabella ordini
+        //l'id del cliente, che ora mi serve come chiave esterna (cliente_id) è stato creato nel precedente bind e recuperato tramite il lastInsertId
         $stmt = $db->prepare("INSERT INTO ordini (cliente_id, data, totale, note)
                               VALUES (:cliente_id, :data, :totale, :note)");
 
         $stmt->bindParam(':cliente_id', $idCliente, PDO::PARAM_INT);
-
+        //date è una funzione di PHP
         $date = date('Y-m-d H:i:s');
         $stmt->bindParam(':data', $date);
 
@@ -77,7 +80,7 @@ function salvaOrdine($prodotti, $utente) {
 
         // inserimento in tabella ordini_dettagli
         foreach($prodotti as $rigaProdotto) {
-
+                                  //l'id non c'è ...quindi lo crea lui in autoincrement
             $stmt = $db->prepare("INSERT INTO ordini_dettagli (ordine_id, codice_prodotto, prezzo, quantita, totale)
                                   VALUES (:ordine_id, :codice_prodotto, :prezzo, :quantita, :totale)");
 
@@ -95,7 +98,7 @@ function salvaOrdine($prodotti, $utente) {
 
         $db->commit();
 
-    } catch (Exception $e) {
+    } catch (Exception $e) {//la variabile e si prende il tipo di errore
         $db->rollBack();
         echo "Si è verificato un errore: " . $e->getMessage();
     }

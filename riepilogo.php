@@ -1,5 +1,5 @@
 <?php
-// inizializziamo le sessioni
+// inizializziamo le sessioni e non accedo al db perchè non ne ho bisogno
 session_start();
 
 include 'libs/carrello.php';
