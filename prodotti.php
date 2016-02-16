@@ -1,12 +1,19 @@
 <?php
-include 'libs/db.php';
 
-$arrayProdotti = inizializzaListaProdotti();
+session_start();
+
+include 'libs/db.php';
+include 'libs/categoria.php';
+
+$preferenza = getSceltaCategoria();
+$arrayCategorie = inizializzaListaCategorie ();
+$arrayProdotti = inizializzaListaProdottiCategorizzati($preferenza);
 
 ?>
 <!DOCTYPE html>
 <html>
   <head>
+    <!--<p><?php echo "$preferenza";?></p>-->
     <title>MV chocosite</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,12 +31,17 @@ $arrayProdotti = inizializzaListaProdotti();
             <img src="https://c2.staticflickr.com/6/5105/5626762538_406270541c_b.jpg">
           </div>
           <div class="col-md-9">
-            <h1>Il cioccolato più buono? Lo trovi da noi!</h1>
+            <h1>Tutti i prodotti</h1>
+            <h3 style="margin-top: 20px">Scegli il tuo preferito</h3>
+            <a href="aggiungi_categoria.php?categoria=Tutte" type="button" class="btn <?php if ($preferenza == Tutte) echo "btn-info"; else echo "btn-default"; ?>">Tutte</a>
+            <?php foreach($arrayCategorie as $gruppo): ?>
+              <a href="aggiungi_categoria.php?categoria=<?= $gruppo['id']?>" role="button" class="btn <?php if ($gruppo['id'] == $preferenza) echo "btn-info"; else echo "btn-default"; ?>"><?= $gruppo['nome'] ?></a>
+            <?php endforeach; ?>
           </div>
         </div>
         <div class="row">
           <?php foreach($arrayProdotti as $prodotto) { ?>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <div class="panel panel-default">
               <div class="panel-heading"><a href="/prodotto.php?codice=<?= $prodotto['codice'] ?>"><?= $prodotto['nome'] ?></a></div>
               <div class="panel-body">

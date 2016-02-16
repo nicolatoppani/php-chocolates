@@ -15,7 +15,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a href="/index.php">Home <span class="sr-only">(current)</span></a></li>
-        <li class="active"><a href="/prodotti.html">Prodotti</a></li>
+        <li class="active"><a href="/prodotti.php">Prodotti</a></li>
         <li><a href="/dove-siamo.html">La filosofia</a></li>
         <li><a href="/chi-siamo.html">Chi siamo</a></li>
       </ul>

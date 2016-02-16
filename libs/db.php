@@ -11,6 +11,25 @@ function inizializzaListaProdotti() {
     return $db->query('SELECT * FROM prodotti');
 }
 
+function inizializzaListaProdottiCategorizzati($preferenza) {
+    $db = creaConnessionePDO();
+    if ($preferenza == 'Tutte') {
+      //$query = "SELECT nome, url_immagine, codice FROM prodotti WHERE cat_id =" . $_SESSION['preferenza'];
+      $query = "SELECT nome, url_immagine, codice FROM prodotti WHERE cat_id != 0";
+      return $db->query($query);
+    }
+    else {
+      $query = "SELECT nome, url_immagine, codice FROM prodotti WHERE cat_id =" . $preferenza;
+      return $db->query($query);
+    }
+}
+
+function inizializzaListaCategorie() {
+    $db = creaConnessionePDO();
+    return $db->query('SELECT * FROM categorie');
+}
+
+
 function recuperaProdottoDaCodice($codice) {
     $db = creaConnessionePDO();
 
@@ -28,6 +47,7 @@ function recuperaProdottoDaCodice($codice) {
 
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
 
 function salvaOrdine($prodotti, $utente) {
 
