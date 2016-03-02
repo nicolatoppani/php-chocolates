@@ -33,6 +33,7 @@ include 'libs/db.php';
                 <th>Cliente</th>
                 <th>Num. prodotti</th>
                 <th>Totale</th>
+                <th>Stato spedizione</th>
                 <th></th>
               </tr>
             </thead>
@@ -46,6 +47,7 @@ include 'libs/db.php';
                 <td><?=$ordine["nome"] . ' ' . $ordine["cognome"]?></td>
                 <td><?=$ordine["num_prodotti"]?></td>
                 <td><?=$ordine["totale"] / 100?> &euro;</td>
+                <td><?=$ordine["stato"]?></td>
                 <td><a href="scheda_ordine.php?id=<?=$ordine["id"]?>" class="btn btn-link">dettaglio</a></td>
               </tr>
               <?php } ?>

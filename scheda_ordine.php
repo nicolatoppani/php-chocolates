@@ -42,6 +42,15 @@ $dettagliOrdine = recuperaDettagliOrdine($idOrdine);
                 <dd><?=$ordine["totale"] / 100?> &euro;</dd>
             </dl>
             <dl class="dl-horizontal">
+                <dt>Spedizione</dt>
+                <dd><?=$ordine["stato"]?></dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>Cambia lo stato</dt>
+                <dd><button>In consegna</button></dd>
+                <dd><button>Consegnato</button></dd>
+            </dl>
+            <dl class="dl-horizontal">
                 <dt>Note</dt>
                 <dd><?=$ordine["note"]?></dd>
             </dl>

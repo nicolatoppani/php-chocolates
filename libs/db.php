@@ -117,19 +117,21 @@ function salvaOrdine($prodotti, $utente) {
 function getListaOrdini() {
     $db = creaConnessionePDO();
 
-    $query = "SELECT ordini.id, ordini.data, clienti.nome, clienti.cognome, COUNT(ordini_dettagli.id) as num_prodotti, ordini.totale
-              FROM ordini, clienti, ordini_dettagli
+    $query = "SELECT ordini.id, ordini.data, clienti.nome, clienti.cognome, COUNT(ordini_dettagli.id) as num_prodotti, ordini.totale, spedizione.stato
+              FROM ordini, clienti, ordini_dettagli, spedizione
               WHERE ordini.id = ordini_dettagli.ordine_id
               AND ordini.cliente_id = clienti.id
+              AND spedizione.id = ordini.stato_spedizione
               GROUP BY ordini.id";
 
     return $db->query($query);
 }
 
+
 function recuperaOrdine($id) {
     $db = creaConnessionePDO();
 
-    $stmt = $db->prepare('SELECT * FROM ordini, clienti WHERE ordini.cliente_id = clienti.id AND ordini.id = :id');
+    $stmt = $db->prepare('SELECT * FROM ordini, clienti, spedizione WHERE ordini.cliente_id = clienti.id AND ordini.id = :id AND spedizione.id = ordini.stato_spedizione');
 
     $codice = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
